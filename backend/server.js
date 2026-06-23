@@ -33,7 +33,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
 
-// ===== HEALTH CHECK (for Railway) =====
+// ===== HEALTH CHECK =====
 app.get("/health", (req, res) => {
     res.status(200).send("OK");
 });
@@ -43,32 +43,40 @@ app.get("/", (req, res) => {
     res.send("Server is running");
 });
 
-// ===== CATCH-ALL WILDCARD =====
+// ===== CATCH-ALL =====
 app.get('/*splat', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
-// ===== GLOBAL ERROR HANDLERS =====
+// ===== KEEP-ALIVE: prevent event loop from emptying =====
+setInterval(() => {
+    console.log("⏳ Keep-alive ping");
+}, 30000);
+
+// ===== ERROR HANDLERS =====
 process.on('uncaughtException', (err) => {
     console.error('💥 Uncaught Exception:', err);
 });
-
 process.on('unhandledRejection', (reason, promise) => {
     console.error('💥 Unhandled Rejection:', reason);
 });
+process.on('SIGTERM', () => {
+    console.log('Received SIGTERM, exiting gracefully');
+    process.exit(0);
+});
+process.on('SIGINT', () => {
+    console.log('Received SIGINT, exiting gracefully');
+    process.exit(0);
+});
 
-// ===== START SERVER AFTER DB CONNECTION =====
+// ===== START SERVER =====
 const startServer = async () => {
     try {
         await connectDB();
         const PORT = process.env.PORT || 5000;
-        const server = app.listen(PORT, () => {
+        app.listen(PORT, () => {
             console.log(`🚀 Server running on port ${PORT}`);
-        });
-
-        // Keep process alive (just in case)
-        server.on('error', (err) => {
-            console.error('❌ Server error:', err);
+            console.log(`✅ Environment: ${process.env.NODE_ENV || 'development'}`);
         });
     } catch (error) {
         console.error("❌ Failed to start server:", error.message);
