@@ -65,14 +65,6 @@ process.on('uncaughtException', (err) => {
 process.on('unhandledRejection', (reason, promise) => {
     console.error('💥 Unhandled Rejection:', reason);
 });
-process.on('SIGTERM', () => {
-    console.log('Received SIGTERM, exiting gracefully');
-    process.exit(0);
-});
-process.on('SIGINT', () => {
-    console.log('Received SIGINT, exiting gracefully');
-    process.exit(0);
-});
 
 // ===== START SERVER =====
 const startServer = async () => {
