@@ -39,7 +39,7 @@ app.get("/", (req, res) => {
 });
 
 // ===== CATCH-ALL WILDCARD (MUST BE LAST - sends index.html for all other routes) =====
-app.get('/*', (req, res) => {
+app.get('/*splat', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
