@@ -2,14 +2,9 @@
   "services": [
     {
       "name": "backend",
-      "source": {
-        "root": "backend"
-      },
       "build": {
         "builder": "NIXPACKS",
-        "args": {
-          "NIXPACKS_WORKDIR": "backend"
-        }
+        "context": "backend"
       },
       "deploy": {
         "startCommand": "npm start"
