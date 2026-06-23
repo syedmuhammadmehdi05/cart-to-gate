@@ -30,7 +30,7 @@ app.use((req, res, next) => {
     next();
 });
 
-// ===== STATIC FILES =====
+// ===== STATIC FILES (frontend) =====
 app.use(express.static(path.join(__dirname, '../frontend')));
 
 // ===== API ROUTES =====
@@ -39,7 +39,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
 
-// ===== HEALTH CHECK =====
+// ===== HEALTH CHECK (for Railway) =====
 app.get("/health", (req, res) => {
     res.status(200).send("OK");
 });
@@ -49,33 +49,40 @@ app.get("/", (req, res) => {
     res.send("Server is running");
 });
 
-// ===== CATCH-ALL =====
+// ===== CATCH-ALL WILDCARD (sends index.html for any unmatched route) =====
 app.get('/*splat', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
-// ===== KEEP-ALIVE =====
+// ===== KEEP-ALIVE: prevents event loop from emptying =====
 setInterval(() => {
     console.log("⏳ Keep-alive ping");
 }, 30000);
 
-// ===== IGNORE TERMINATION SIGNALS =====
+// Extra interval to ensure event loop stays busy (every second)
+setInterval(() => {
+    // do nothing – just keep the loop alive
+}, 1000);
+
+// ===== IGNORE TERMINATION SIGNALS (Railway sends SIGTERM) =====
 process.on('SIGTERM', () => {
-    console.log('Received SIGTERM, ignoring it to keep container alive');
+    console.log('Received SIGTERM – ignoring it to keep container alive');
+    // Do NOT call process.exit()
 });
 process.on('SIGINT', () => {
-    console.log('Received SIGINT, ignoring it');
+    console.log('Received SIGINT – ignoring it');
+    // Do NOT call process.exit()
 });
 
-// ===== ERROR HANDLERS (log but don't exit) =====
+// ===== ERROR HANDLERS (log but do NOT exit) =====
 process.on('uncaughtException', (err) => {
     console.error('💥 Uncaught Exception:', err);
 });
-process.on('unhandledRejection', (reason, promise) => {
+process.on('unhandledRejection', (reason) => {
     console.error('💥 Unhandled Rejection:', reason);
 });
 
-// ===== START SERVER =====
+// ===== START SERVER AFTER DATABASE CONNECTION =====
 const startServer = async () => {
     try {
         await connectDB();
@@ -86,8 +93,7 @@ const startServer = async () => {
         });
     } catch (error) {
         console.error("❌ Failed to start server:", error.message);
-        // Do NOT exit here – keep retrying? Better to log and let Railway handle restart.
-        // But for now, we exit so Railway can restart if DB fails.
+        // Exit only on fatal error – Railway will restart
         process.exit(1);
     }
 };
