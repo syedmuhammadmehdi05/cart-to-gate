@@ -1,16 +1,12 @@
 const crypto = require("crypto");
 global.crypto = crypto;
-
 const dns = require("dns");
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
-
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const path = require("path");
-
 dotenv.config();
-
 const app = express();
 
 // ===== IMPORTS =====
@@ -50,8 +46,20 @@ app.get("/", (req, res) => {
 });
 
 // ===== CATCH-ALL WILDCARD (sends index.html for any unmatched route) =====
-app.get('/*splat', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/index.html'));
+app.get('/*', (req, res) => {
+    const filePath = path.join(__dirname, '../frontend/index.html');
+    res.sendFile(filePath, (err) => {
+        if (err) {
+            console.error('Error sending file:', err.message);
+            res.status(404).send('Not Found');
+        }
+    });
+});
+
+// ===== ERROR HANDLER (catch all errors) =====
+app.use((err, req, res, next) => {
+    console.error('Express error:', err);
+    res.status(500).send('Internal Server Error');
 });
 
 // ===== KEEP-ALIVE: prevents event loop from emptying =====
@@ -69,6 +77,7 @@ process.on('SIGTERM', () => {
     console.log('Received SIGTERM – ignoring it to keep container alive');
     // Do NOT call process.exit()
 });
+
 process.on('SIGINT', () => {
     console.log('Received SIGINT – ignoring it');
     // Do NOT call process.exit()
@@ -78,6 +87,7 @@ process.on('SIGINT', () => {
 process.on('uncaughtException', (err) => {
     console.error('💥 Uncaught Exception:', err);
 });
+
 process.on('unhandledRejection', (reason) => {
     console.error('💥 Unhandled Rejection:', reason);
 });
