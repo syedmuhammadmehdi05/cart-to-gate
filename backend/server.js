@@ -1,12 +1,16 @@
 const crypto = require("crypto");
 global.crypto = crypto;
+
 const dns = require("dns");
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
+
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const path = require("path");
+
 dotenv.config();
+
 const app = express();
 
 // ===== IMPORTS =====
@@ -45,8 +49,9 @@ app.get("/", (req, res) => {
     res.send("Server is running");
 });
 
-// ===== CATCH-ALL WILDCARD (sends index.html for any unmatched route) =====
-app.get('/*', (req, res) => {
+// ===== CATCH-ALL WILDCARD – FIXED FOR EXPRESS 5 =====
+// Use /*splat (named parameter) instead of /* or *
+app.get('/*splat', (req, res) => {
     const filePath = path.join(__dirname, '../frontend/index.html');
     res.sendFile(filePath, (err) => {
         if (err) {
