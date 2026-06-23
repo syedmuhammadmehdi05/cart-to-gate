@@ -13,7 +13,7 @@ dotenv.config();
 
 const app = express();
 
-// ===== IMPORTS (ALL TOGETHER) =====
+// ===== IMPORTS =====
 const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
 const connectDB = require("./config/db");
@@ -24,33 +24,51 @@ const orderRoutes = require("./routes/orderRoutes");
 app.use(express.json());
 app.use(cors());
 
-// ===== STATIC FILES (serves frontend CSS/JS/images) =====
+// ===== STATIC FILES =====
 app.use(express.static(path.join(__dirname, '../frontend')));
 
-// ===== API ROUTES (MUST COME BEFORE THE WILDCARD) =====
+// ===== API ROUTES =====
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
+
+// ===== HEALTH CHECK (for Railway) =====
+app.get("/health", (req, res) => {
+    res.status(200).send("OK");
+});
 
 // ===== TEST ROUTE =====
 app.get("/", (req, res) => {
     res.send("Server is running");
 });
 
-// ===== CATCH-ALL WILDCARD (MUST BE LAST - sends index.html for all other routes) =====
+// ===== CATCH-ALL WILDCARD =====
 app.get('/*splat', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
-// ===== DB AND START SERVER =====
+// ===== GLOBAL ERROR HANDLERS =====
+process.on('uncaughtException', (err) => {
+    console.error('💥 Uncaught Exception:', err);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('💥 Unhandled Rejection:', reason);
+});
+
+// ===== START SERVER AFTER DB CONNECTION =====
 const startServer = async () => {
     try {
-        await connectDB(); // Wait for DB connection
-
+        await connectDB();
         const PORT = process.env.PORT || 5000;
-        app.listen(PORT, () => {
+        const server = app.listen(PORT, () => {
             console.log(`🚀 Server running on port ${PORT}`);
+        });
+
+        // Keep process alive (just in case)
+        server.on('error', (err) => {
+            console.error('❌ Server error:', err);
         });
     } catch (error) {
         console.error("❌ Failed to start server:", error.message);
