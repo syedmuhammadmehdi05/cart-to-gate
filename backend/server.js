@@ -24,6 +24,7 @@ const orderRoutes = require("./routes/orderRoutes");
 app.use(express.json());
 app.use(cors());
 
+// Request logger
 app.use((req, res, next) => {
     console.log(`📡 ${req.method} ${req.url}`);
     next();
@@ -53,12 +54,20 @@ app.get('/*splat', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
-// ===== KEEP-ALIVE: prevent event loop from emptying =====
+// ===== KEEP-ALIVE =====
 setInterval(() => {
     console.log("⏳ Keep-alive ping");
 }, 30000);
 
-// ===== ERROR HANDLERS =====
+// ===== IGNORE TERMINATION SIGNALS =====
+process.on('SIGTERM', () => {
+    console.log('Received SIGTERM, ignoring it to keep container alive');
+});
+process.on('SIGINT', () => {
+    console.log('Received SIGINT, ignoring it');
+});
+
+// ===== ERROR HANDLERS (log but don't exit) =====
 process.on('uncaughtException', (err) => {
     console.error('💥 Uncaught Exception:', err);
 });
@@ -77,6 +86,8 @@ const startServer = async () => {
         });
     } catch (error) {
         console.error("❌ Failed to start server:", error.message);
+        // Do NOT exit here – keep retrying? Better to log and let Railway handle restart.
+        // But for now, we exit so Railway can restart if DB fails.
         process.exit(1);
     }
 };
