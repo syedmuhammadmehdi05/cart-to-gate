@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Create a new Cart to Gate account.">
+    <title>Register — Cart to Gate</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .auth-links {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.95rem;
+        }
+
+        .auth-links a {
+            color: #0077b6;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Toast notification -->
+    <div id="toast" class="toast" aria-live="polite"></div>
+
+    <header>
+        <nav class="navbar">
+            <div class="brand">
+                <span class="img-logo">
+                    <img src="img/delivery-and-courier-motorbike-logo-free-vector.jpg" alt="Cart to Gate logo">
+                </span>
+                <span class="brand-name">Cart to Gate</span>
+            </div>
+            <!-- Search bar centered (USER view only) -->
+            <div class="nav-search-container" id="nav-search-wrapper" style="display: none;">
+                <input type="text" id="nav-search-input" placeholder="Search products by title or description...">
+            </div>
+            <ul class="nav-links">
+                <!-- Dynamically populated by auth.js -->
+            </ul>
+        </nav>
+    </header>
+
+    <main class="auth-container">
+        <h1 style="color:#03045E; text-align:center; margin-bottom:30px; font-size:2.2rem;">Create an Account</h1>
+
+        <form id="form-register" novalidate>
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" class="form-control" placeholder="John Doe" autocomplete="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" class="form-control" placeholder="john@example.com" autocomplete="email"
+                    required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" class="form-control" placeholder="At least 6 characters"
+                    autocomplete="new-password" required>
+            </div>
+
+            <!-- Inline error/success message — managed by auth.js -->
+            <div class="form-error" role="alert" aria-live="polite"></div>
+
+            <button type="submit" class="auth-btn">Register</button>
+        </form>
+
+        <div class="auth-links">
+            Already have an account? <a href="login.html">Login here</a>
+        </div>
+    </main>
+
+    <!-- api.js must load first (defines apiFetch, apiRegister, etc.) -->
+    <!-- auth.js handles form submit, navbar update, and logout        -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+
+</html>

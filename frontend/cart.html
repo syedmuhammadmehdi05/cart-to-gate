@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Your shopping cart on Cart to Gate.">
+    <title>Cart — Cart to Gate</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .remove-btn {
+            background: #ff4d4f;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .remove-btn:hover {
+            background: #d9363e;
+        }
+
+        .qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .qty-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            background: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            line-height: 1;
+            transition: background 0.15s;
+        }
+
+        .qty-btn:hover {
+            background: #e9ecef;
+        }
+
+        .qty-display {
+            min-width: 24px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .cart-summary {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: right;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-top: 20px;
+        }
+
+        .cart-summary h3 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 1.5rem;
+        }
+
+        .total-amount {
+            font-size: 1.8rem;
+            color: #0077b6;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .checkout-btn {
+            background: #0077b6;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .checkout-btn:hover {
+            background: #03045E;
+        }
+
+        .loading-msg,
+        .empty-cart-msg,
+        .error-msg {
+            text-align: center;
+            padding: 30px;
+            color: #6c757d;
+        }
+
+        .error-msg {
+            color: #dc3545;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Toast notification -->
+    <div id="toast" class="toast" aria-live="polite"></div>
+
+    <header>
+        <nav class="navbar">
+            <div class="brand">
+                <span class="img-logo">
+                    <img src="img/delivery-and-courier-motorbike-logo-free-vector.jpg" alt="Cart to Gate logo">
+                </span>
+                <span class="brand-name">Cart to Gate</span>
+            </div>
+            <!-- Search bar centered (USER view only) -->
+            <div class="nav-search-container" id="nav-search-wrapper" style="display: none;">
+                <input type="text" id="nav-search-input" placeholder="Search products by title or description...">
+            </div>
+            <ul class="nav-links">
+                <!-- Dynamically populated by auth.js -->
+            </ul>
+        </nav>
+    </header>
+
+    <main class="cart-container">
+        <h1 style="color:#03045E; text-align:center; margin-bottom:30px; font-size:2.2rem;">Your Shopping Cart</h1>
+
+        <table class="cart-table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dynamically rendered by main.js -->
+            </tbody>
+        </table>
+
+        <div class="cart-summary">
+            <h3>Order Summary</h3>
+            <div class="total-amount">Total: PKR 0.00</div>
+            <button type="button" id="btn-open-order" class="checkout-btn">Proceed to Checkout ▼</button>
+        </div>
+
+        <!-- Collapsible Order Panel -->
+        <div id="order-panel" class="order-panel" style="display: none;">
+            <h2 style="color: #03045E; margin-top: 40px; margin-bottom: 20px; font-size: 1.8rem; text-align: center;">
+                Delivery Details</h2>
+            <form id="form-place-order" novalidate
+                style="max-width: 600px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+                <div class="form-group">
+                    <label for="order-address">Delivery Address</label>
+                    <textarea id="order-address" class="form-control" placeholder="Enter your full delivery address"
+                        required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="order-phone">Phone Number</label>
+                    <input type="tel" id="order-phone" class="form-control" placeholder="e.g. 0300 1234567" required>
+                </div>
+                <div class="form-group">
+                    <label for="order-payment">Payment Method</label>
+                    <select id="order-payment" class="form-control" required>
+                        <option value="" disabled selected>Select a payment method</option>
+                        <option value="cod">Cash on Delivery (COD)</option>
+                        <option value="card">Credit/Debit Card</option>
+                        <option value="bank">Bank Transfer</option>
+                    </select>
+                </div>
+
+                <div class="form-error" role="alert" aria-live="polite"></div>
+
+                <button type="submit" class="place-order-btn"
+                    style="width: 100%; background: #0077b6; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: 0.2s; margin-top: 15px;">Place
+                    Order</button>
+            </form>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2025 Cart to Gate. All rights reserved.</p>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/cart.js"></script>
+</body>
+
+</html>

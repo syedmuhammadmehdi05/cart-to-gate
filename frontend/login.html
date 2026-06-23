@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Login to your Cart to Gate account.">
+    <title>Login — Cart to Gate</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .login-extra {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+
+        .login-extra a {
+            color: #0077b6;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-extra a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Toast notification -->
+    <div id="toast" class="toast" aria-live="polite"></div>
+
+    <header>
+        <nav class="navbar">
+            <div class="brand">
+                <span class="img-logo">
+                    <img src="img/delivery-and-courier-motorbike-logo-free-vector.jpg" alt="Cart to Gate logo">
+                </span>
+                <span class="brand-name">Cart to Gate</span>
+            </div>
+            <!-- Search bar centered (USER view only) -->
+            <div class="nav-search-container" id="nav-search-wrapper" style="display: none;">
+                <input type="text" id="nav-search-input" placeholder="Search products by title or description...">
+            </div>
+            <ul class="nav-links">
+                <!-- Dynamically populated by auth.js -->
+            </ul>
+        </nav>
+    </header>
+
+    <main class="auth-container">
+        <h1 style="color:#03045E; text-align:center; margin-bottom:30px; font-size:2.2rem;">Welcome Back</h1>
+
+        <form id="form-login" novalidate>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" class="form-control" placeholder="john@example.com" autocomplete="email"
+                    required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" class="form-control" placeholder="Enter your password"
+                    autocomplete="current-password" required>
+            </div>
+
+            <!-- Inline error/success message — managed by auth.js -->
+            <div class="form-error" role="alert" aria-live="polite"></div>
+
+            <button type="submit" class="auth-btn">Login</button>
+        </form>
+
+        <div class="login-extra">
+            Don't have an account? <a href="register.html">Register here</a>
+        </div>
+    </main>
+
+    <!-- api.js must load first (defines apiFetch, apiLogin, etc.)  -->
+    <!-- auth.js handles form submit, navbar update, and logout      -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products | Cart to Gate</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- Toast notification -->
+    <div id="toast" class="toast" aria-live="polite"></div>
+
+    <header>
+        <nav class="navbar">
+            <div class="brand">
+                <span class="img-logo">
+                    <img src="img/delivery-and-courier-motorbike-logo-free-vector.jpg" alt="Cart to Gate logo">
+                </span>
+                <span class="brand-name">Cart to Gate</span>
+            </div>
+            <!-- Search bar centered (USER view only) -->
+            <div class="nav-search-container" id="nav-search-wrapper" style="display: none;">
+                <input type="text" id="nav-search-input" placeholder="Search products by title or description...">
+            </div>
+            <ul class="nav-links">
+                <!-- Dynamically populated by auth.js -->
+            </ul>
+        </nav>
+    </header>
+
+    <main class="page-content">
+        <!-- Product list section (visible by default, or shown when no ID) -->
+        <section class="product-section" id="product-list-section" style="display: none;">
+            <h2 style="text-align: center; margin-bottom: 30px; color: #03045E;">Our Products</h2>
+            <div class="product-grid">
+                <!-- Products dynamically rendered by main.js via API -->
+            </div>
+        </section>
+
+        <!-- Product detail section (hidden by default, shown when ID present) -->
+        <section class="product-detail-page" id="product-detail-section" style="display: none;">
+            <div class="product-detail-card">
+                <!-- Dynamically rendered by main.js -->
+                <p class="loading-msg">Loading product details…</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2025 Cart to Gate. All rights reserved.</p>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

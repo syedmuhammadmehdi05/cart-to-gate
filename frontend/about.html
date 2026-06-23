@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="About Cart to Gate — Our story, mission, contact info, and social links.">
+    <title>About Us — Cart to Gate</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .about-section {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 40px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .about-section h1 {
+            color: #03045E;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .about-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #495057;
+            margin-bottom: 40px;
+        }
+
+        .about-text p {
+            margin-bottom: 20px;
+        }
+
+        .contact-social-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 30px;
+            border-top: 1px solid #e9ecef;
+            padding-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .contact-social-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+
+        .info-card h3 {
+            color: #0077b6;
+            font-size: 1.3rem;
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #caf0f8;
+            padding-bottom: 8px;
+        }
+
+        .info-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .info-list li {
+            margin-bottom: 12px;
+            color: #495057;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-list li strong {
+            color: #03045E;
+            min-width: 80px;
+        }
+
+        .social-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .social-btn {
+            display: inline-block;
+            background-color: #caf0f8;
+            color: #03045E;
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .social-btn:hover {
+            background-color: #90e0ef;
+            color: #03045E;
+            transform: translateY(-2px);
+        }
+
+        .social-btn:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Toast notification -->
+    <div id="toast" class="toast" aria-live="polite"></div>
+
+    <header>
+        <nav class="navbar">
+            <div class="brand">
+                <span class="img-logo">
+                    <img src="img/delivery-and-courier-motorbike-logo-free-vector.jpg" alt="Cart to Gate logo">
+                </span>
+                <span class="brand-name">Cart to Gate</span>
+            </div>
+            <!-- Search bar centered (USER view only) -->
+            <div class="nav-search-container" id="nav-search-wrapper" style="display: none;">
+                <input type="text" id="nav-search-input" placeholder="Search products by title or description...">
+            </div>
+            <ul class="nav-links">
+                <!-- Dynamically populated by auth.js -->
+            </ul>
+        </nav>
+    </header>
+
+    <main class="page-content">
+        <section class="about-section">
+            <h1>About Cart to Gate</h1>
+
+            <div class="about-text">
+                <p>
+                    Welcome to <strong>Cart to Gate</strong>, your number one source for all things shopping. We're
+                    dedicated to giving you the very best experience, with a focus on fast delivery, exceptional
+                    customer service, and absolute reliability.
+                </p>
+                <p>
+                    Founded in 2025, Cart to Gate has come a long way from its beginnings. When we first started out,
+                    our passion for seamless e-commerce drove us to do intense research and build a platform that gets
+                    your cart items straight to your gate in record time. We now serve customers all over the region and
+                    are thrilled that we're able to turn our passion into our own web store.
+                </p>
+                <p>
+                    We hope you enjoy our products as much as we enjoy offering them to you. If you have any questions
+                    or comments, please don't hesitate to contact us.
+                </p>
+            </div>
+
+            <div class="contact-social-grid">
+                <!-- Contact info -->
+                <div class="info-card">
+                    <h3>Contact Information</h3>
+                    <ul class="info-list">
+                        <li><strong>Address:</strong> 123 E-Commerce Way, Suite 400, Tech City</li>
+                        <li><strong>Phone:</strong> +92 300 1234567</li>
+                        <li><strong>Email:</strong> support@carttogate.com</li>
+                        <li><strong>Hours:</strong> Mon - Sat: 9:00 AM - 6:00 PM</li>
+                    </ul>
+                </div>
+
+                <!-- Social Links -->
+                <div class="info-card">
+                    <h3>Connect With Us</h3>
+                    <p style="color:#6c757d; margin-top:0; margin-bottom:15px; font-size:0.95rem;">
+                        Follow us on social media for the latest product updates, discount offers, and news!
+                    </p>
+                    <div class="social-links">
+                        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"
+                            class="social-btn">Facebook</a>
+                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"
+                            class="social-btn">Twitter</a>
+                        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"
+                            class="social-btn">Instagram</a>
+                        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"
+                            class="social-btn">LinkedIn</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2025 Cart to Gate. All rights reserved.</p>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complete your order on Cart to Gate.">
+    <title>Checkout — Cart to Gate</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .place-order-btn {
+            width: 100%;
+            background: #0077b6;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+
+        .place-order-btn:hover {
+            background: #03045E;
+        }
+
+        .place-order-btn:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Toast notification -->
+    <div id="toast" class="toast" aria-live="polite"></div>
+
+    <header>
+        <nav class="navbar">
+            <div class="brand">
+                <span class="img-logo">
+                    <img src="img/delivery-and-courier-motorbike-logo-free-vector.jpg" alt="Cart to Gate logo">
+                </span>
+                <span class="brand-name">Cart to Gate</span>
+            </div>
+            <!-- Search bar centered (USER view only) -->
+            <div class="nav-search-container" id="nav-search-wrapper" style="display: none;">
+                <input type="text" id="nav-search-input" placeholder="Search products by title or description...">
+            </div>
+            <ul class="nav-links">
+                <!-- Dynamically populated by auth.js -->
+            </ul>
+        </nav>
+    </header>
+
+    <main class="checkout-container">
+        <h1 style="color:#03045E; text-align:center; margin-bottom:30px; font-size:2.2rem;">Checkout</h1>
+
+        <form id="form-checkout" novalidate>
+            <div class="form-group">
+                <label for="address">Delivery Address</label>
+                <textarea id="address" class="form-control" placeholder="Enter your full delivery address"
+                    required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" class="form-control" placeholder="e.g. 0300 1234567" required>
+            </div>
+            <div class="form-group">
+                <label for="payment">Payment Method</label>
+                <select id="payment" class="form-control" required>
+                    <option value="" disabled selected>Select a payment method</option>
+                    <option value="cod">Cash on Delivery (COD)</option>
+                    <option value="card">Credit/Debit Card</option>
+                    <option value="bank">Bank Transfer</option>
+                </select>
+            </div>
+
+            <!-- Inline error/success message -->
+            <div class="form-error" role="alert" aria-live="polite"></div>
+
+            <button type="submit" class="place-order-btn">Place Order</button>
+        </form>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2025 Cart to Gate. All rights reserved.</p>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/checkout.js"></script>
+</body>
+
+</html>

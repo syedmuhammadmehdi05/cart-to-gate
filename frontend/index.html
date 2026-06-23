@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Cart to Gate — Browse and buy smart. Fast, simple online shopping.">
+    <title>Cart to Gate — Home</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- Toast notification -->
+    <div id="toast" class="toast" aria-live="polite"></div>
+
+    <header>
+        <nav class="navbar">
+            <div class="brand">
+                <span class="img-logo">
+                    <img src="img/delivery-and-courier-motorbike-logo-free-vector.jpg" alt="Cart to Gate logo">
+                </span>
+                <span class="brand-name">Cart to Gate</span>
+            </div>
+            <!-- Search bar centered (USER view only) -->
+            <div class="nav-search-container" id="nav-search-wrapper" style="display: none;">
+                <input type="text" id="nav-search-input" placeholder="Search products by title or description...">
+            </div>
+            <ul class="nav-links">
+                <!-- Dynamically populated by auth.js -->
+            </ul>
+        </nav>
+    </header>
+
+    <main class="landing-container">
+        <section class="landing-content">
+            <h2 id="welcome-message" style="display: none; font-size: 2rem; color: #caf0f8; margin-bottom: 15px; font-weight: 600;"></h2>
+            <h1>Shop smart. Shop fast.</h1>
+            <p>Browse our latest products and add them to your cart in seconds.</p>
+            <a href="products.html" class="hero-cta">View Products</a>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2025 Cart to Gate. All rights reserved.</p>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
