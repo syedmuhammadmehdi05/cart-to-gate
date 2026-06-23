@@ -24,9 +24,6 @@ const orderRoutes = require("./routes/orderRoutes");
 app.use(express.json());
 app.use(cors());
 
-// ===== DB =====
-connectDB();
-
 // ===== STATIC FILES (serves frontend CSS/JS/images) =====
 app.use(express.static(path.join(__dirname, '../frontend')));
 
@@ -46,9 +43,19 @@ app.get('/*splat', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
-// ===== START SERVER =====
-const PORT = process.env.PORT || 5000;
+// ===== DB AND START SERVER =====
+const startServer = async () => {
+    try {
+        await connectDB(); // Wait for DB connection
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+        const PORT = process.env.PORT || 5000;
+        app.listen(PORT, () => {
+            console.log(`🚀 Server running on port ${PORT}`);
+        });
+    } catch (error) {
+        console.error("❌ Failed to start server:", error.message);
+        process.exit(1);
+    }
+};
+
+startServer();
