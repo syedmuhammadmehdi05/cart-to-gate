@@ -1,99 +1,191 @@
-const crypto = require("crypto");
-global.crypto = crypto;
+// ============================================================
+//  api.js  —  Central API configuration for Cart to Gate
+// ============================================================
 
-const dns = require("dns");
-dns.setServers(["8.8.8.8", "8.8.4.4"]);
+const API_BASE_URL = '';
 
-const express = require("express");
-const cors = require("cors");
-const dotenv = require("dotenv");
-const path = require("path");
+// ── Generic helpers ──────────────────────────────────────────
 
-dotenv.config();
+/**
+ * Retrieve the JWT token stored after login.
+ * @returns {string|null}
+ */
+function getToken() {
+    return localStorage.getItem('ctg_token');
+}
 
-const app = express();
+/**
+ * Build standard JSON headers, attaching the Bearer token when present.
+ * @returns {HeadersInit}
+ */
+function buildHeaders() {
+    const headers = { 'Content-Type': 'application/json' };
+    const token = getToken();
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    return headers;
+}
 
-// ===== IMPORTS =====
-const authRoutes = require("./routes/authRoutes");
-const productRoutes = require("./routes/productRoutes");
-const connectDB = require("./config/db");
-const cartRoutes = require("./routes/cartRoutes");
-const orderRoutes = require("./routes/orderRoutes");
-
-// ===== MIDDLEWARE =====
-app.use(express.json());
-app.use(cors());
-
-// Request logger
-app.use((req, res, next) => {
-    console.log(`📡 ${req.method} ${req.url}`);
-    next();
-});
-
-// ===== STATIC FILES (frontend) =====
-app.use(express.static(path.join(__dirname, "../frontend")));
-
-// ===== API ROUTES =====
-app.use("/api/auth", authRoutes);
-app.use("/api/products", productRoutes);
-app.use("/api/cart", cartRoutes);
-app.use("/api/orders", orderRoutes);
-
-// ===== HEALTH CHECK =====
-app.get("/health", (req, res) => {
-    res.status(200).send("OK");
-});
-
-// ===== ROOT ROUTE =====
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend/index.html"));
-});
-
-// ===== CATCH-ALL ROUTE (Express 5) =====
-app.get("/*splat", (req, res) => {
-    const filePath = path.join(__dirname, "../frontend/index.html");
-
-    res.sendFile(filePath, (err) => {
-        if (err) {
-            console.error("Error sending file:", err.message);
-            res.status(404).send("Not Found");
-        }
+/**
+ * Centralised fetch wrapper.
+ * Throws an Error with the server message on non-2xx responses.
+ *
+ * @param {string} endpoint   – path starting with '/', e.g. '/api/products'
+ * @param {RequestInit} opts  – standard fetch options
+ * @returns {Promise<any>}    – parsed JSON body
+ */
+async function apiFetch(endpoint, opts = {}) {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+        headers: buildHeaders(),
+        ...opts,
     });
-});
 
-// ===== EXPRESS ERROR HANDLER =====
-app.use((err, req, res, next) => {
-    console.error("Express error:", err);
-    res.status(500).send("Internal Server Error");
-});
-
-// ===== PROCESS ERROR HANDLERS =====
-process.on("uncaughtException", (err) => {
-    console.error("💥 Uncaught Exception:", err);
-});
-
-process.on("unhandledRejection", (reason) => {
-    console.error("💥 Unhandled Rejection:", reason);
-});
-
-// ===== START SERVER =====
-const startServer = async () => {
+    let data;
     try {
-        await connectDB();
-
-        const PORT = process.env.PORT || 5000;
-
-        app.listen(PORT, () => {
-            console.log(`🚀 Server running on port ${PORT}`);
-            console.log(
-                `✅ Environment: ${process.env.NODE_ENV || "development"}`
-            );
-        });
-    } catch (error) {
-        console.error("❌ Failed to start server:", error.message);
-        process.exit(1);
+        data = await response.json();
+    } catch {
+        data = {};
     }
-};
 
-startServer();
-```
+    if (!response.ok) {
+        const message = data.message || data.error || `HTTP ${response.status}`;
+        throw new Error(message);
+    }
+
+    return data;
+}
+
+// ── Auth API ─────────────────────────────────────────────────
+
+/**
+ * Register a new user.
+ * @param {{name: string, email: string, password: string}} payload
+ */
+async function apiRegister(payload) {
+    return apiFetch('/api/auth/register', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+    });
+}
+
+/**
+ * Login an existing user. Stores the returned token in localStorage.
+ * @param {{email: string, password: string}} payload
+ */
+async function apiLogin(payload) {
+    const data = await apiFetch('/api/auth/login', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+    });
+    if (data.token) {
+        localStorage.setItem('ctg_token', data.token);
+        if (data.user) localStorage.setItem('ctg_user', JSON.stringify(data.user));
+    }
+    return data;
+}
+
+/** Remove the session from localStorage. */
+function apiLogout() {
+    localStorage.removeItem('ctg_token');
+    localStorage.removeItem('ctg_user');
+}
+
+// ── Products API ─────────────────────────────────────────────
+
+/** Fetch all products from the backend. */
+async function apiGetProducts() {
+    return apiFetch('/api/products');
+}
+
+/**
+ * Fetch a single product by ID.
+ * @param {string|number} id
+ */
+async function apiGetProduct(id) {
+    return apiFetch(`/api/products/${id}`);
+}
+
+// ── Cart API ─────────────────────────────────────────────────
+
+/** Fetch the current user's cart. */
+async function apiGetCart() {
+    return apiFetch('/api/cart');
+}
+
+/**
+ * Add an item to the server-side cart.
+ * Endpoint: POST /api/cart/add
+ * The JWT token is automatically attached by buildHeaders().
+ * @param {string|number} productId
+ * @param {number} quantity
+ */
+async function apiAddToCart(productId, quantity = 1) {
+    return apiFetch('/api/cart/add', {
+        method: 'POST',
+        body: JSON.stringify({ productId, quantity }),
+    });
+}
+
+/**
+ * Update quantity of a cart item.
+ * @param {string|number} cartItemId
+ * @param {number} quantity
+ */
+async function apiUpdateCartItem(cartItemId, quantity) {
+    return apiFetch(`/api/cart/${cartItemId}`, {
+        method: 'PUT',
+        body: JSON.stringify({ quantity }),
+    });
+}
+
+/**
+ * Remove an item from the server-side cart.
+ * @param {string|number} cartItemId
+ */
+async function apiRemoveCartItem(cartItemId) {
+    return apiFetch(`/api/cart/${cartItemId}`, {
+        method: 'DELETE',
+    });
+}
+
+/**
+ * Add a new product to the catalog.
+ * Endpoint: POST /api/products
+ * @param {{name: string, description: string, price: number, image: string, stock: number}} payload
+ */
+async function apiAddProduct(payload) {
+    return apiFetch('/api/products', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+    });
+}
+
+/**
+ * Update an existing product.
+ * Endpoint: PUT /api/products/:id
+ * @param {string|number} id
+ * @param {{name?: string, description?: string, price?: number, image?: string, stock?: number}} payload
+ */
+async function apiUpdateProduct(id, payload) {
+    return apiFetch(`/api/products/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(payload),
+    });
+}
+
+/**
+ * Delete a product by ID.
+ * Endpoint: DELETE /api/products/:id
+ * @param {string|number} id
+ */
+async function apiDeleteProduct(id) {
+    return apiFetch(`/api/products/${id}`, {
+        method: 'DELETE',
+    });
+}
+
+// ── Orders Admin API ──────────────────────────────────────────
+
+/** Fetch all orders (admin). Endpoint: GET /api/orders/all */
+async function apiGetAllOrders() {
+    return apiFetch('/api/orders/all');
+}
