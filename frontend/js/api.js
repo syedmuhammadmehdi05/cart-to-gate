@@ -2,7 +2,7 @@
 //  api.js  —  Central API configuration for Cart to Gate
 // ============================================================
 
-const API_BASE_URL = 'cart-to-gate-production.up.railway.app';
+const API_BASE_URL = 'https://cart-to-gate-production.up.railway.app';
 
 // ── Generic helpers ──────────────────────────────────────────
 
