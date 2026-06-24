@@ -39,17 +39,22 @@ function saveLocalCart(cart) {
 
 document.addEventListener('DOMContentLoaded', () => {
     const path = window.location.pathname;
+    const page = path.split('/').pop();
 
-    if (path.includes('index.html') || path.endsWith('/') || path.endsWith('frontend')) {
+    if (page === 'index.html' || page === '' || page === '/') {
         initHomePage();
     }
 
-    if (path.includes('cart.html')) {
+    if (page === 'cart.html' || page === 'cart') {
         initCartPage();
     }
 
-    if (path.includes('products.html')) {
+    if (page === 'products.html' || page === 'products') {
         initProductDetailPage();
+    }
+
+    if (page === 'admin.html' || page === 'admin') {
+        initAdminDashboard?.();
     }
 });
 
