@@ -529,4 +529,4 @@ function renderProductCard(product, container) {
             detailCard.innerHTML = `<p class="loading-msg error-msg">Could not load product. <br><small>${err.message}</small></p>`;
         }
     }
-
+}
