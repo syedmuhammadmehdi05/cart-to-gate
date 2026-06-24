@@ -1,9 +1,8 @@
 // ============================================================
 //  api.js  —  Central API configuration for Cart to Gate
-//  Backend: http://localhost:5000
 // ============================================================
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = '';
 
 // ── Generic helpers ──────────────────────────────────────────
 
